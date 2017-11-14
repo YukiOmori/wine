@@ -1,4 +1,5 @@
 // fire baseとの接続?
+console.log('読み込み開始');
 let config = {
     apiKey: "AIzaSyAiipaC7uoKV9LXiJ1XXHwAkJHv89BQbP0",
     authDomain: "chatapp-783ff.firebaseapp.com",
@@ -7,14 +8,14 @@ let config = {
     storageBucket: "",
     messagingSenderId: "982383963911"
   };
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
 
 let newPostRef = firebase.database();
 // set buttonが押されたときの処理
 
 $('#set').on('click', () => {
   let userId = $('#userName').val();
-  $('#submit').on('click', () => {
+  $('#send').on('click', () => {
     let d = new Date();
     let date = d.getHours() + ' : ' + d.getMinutes();
 
@@ -25,6 +26,12 @@ $('#set').on('click', () => {
     });
 
     $('#text').val('');
+
+    newPostRef.ref(`user/${userId}`).on('child_added', (data) => {
+      let content = data.val();
+      let addedStr = '<dl id="' + content.date + '"><dt>' + content.userName + '</dt><dd>' + content.text + '</dd><dd>' + content.date + '</dd><dl>';
+      $('#history').prepend(addedStr);
+    });
   });
 });
   // userIDの取得
