@@ -25,7 +25,7 @@ function returnDigitalTime () {
   return h + ':' + m + ':' + s;
 }
 
-$('#send').on('click', () => {
+function sendText() {
   let date = returnDigitalTime();
 
   newPostRef.ref(`${roomId}/post/${date}`).set({
@@ -35,11 +35,15 @@ $('#send').on('click', () => {
   });
 
   $('#text').val('');
+}
+
+$('#send').on('click', () => {
+  sendText();
 });
 
 $('#text').on('keydown', (e) => {
   if (e.keyCode === 13) {
-    
+    sendText();
   }
 });
 
