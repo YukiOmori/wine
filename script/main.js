@@ -17,20 +17,24 @@ $('#set').on('click', () => {
   let userId = $('#userName').val();
   $('#send').on('click', () => {
     let d = new Date();
-    let date = d.getHours() + ' : ' + d.getMinutes();
+    let h = d.getHours().length < 2 ? 0 + d.getHours() : d.getHours();
+    let m = d.getMinutes().length < 2 ? 0 + d.getMinutes() : d.getMinutes();
+    let s = d.getSeconds().length < 2 ? 0 + d.getSeconds() : d.getSeconds();
+    let date = h + ':' + m + ':' + s;
 
     newPostRef.ref(`user/${userId}/${date}`).set({
-      userName: userId,
+      userName: $('#userName').val(),
       text: $('#text').val(),
       date: date
     });
 
     $('#text').val('');
 
-    newPostRef.ref(`user/${userId}`).on('child_added', (data) => {
+    newPostRef.ref(`user/${userId}`).on('child_added', function(data) {
       let content = data.val();
       let addedStr = '<dl id="' + content.date + '"><dt>' + content.userName + '</dt><dd>' + content.text + '</dd><dd>' + content.date + '</dd><dl>';
-      $('#history').prepend(addedStr);
+      $('#history').append(addedStr);
+      $('#history').animate({scrollTop: $('#history')[0].scrollHeight}, 'fast');
     });
   });
 });
